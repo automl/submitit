@@ -47,7 +47,7 @@ Thus, they persist on the cluster even when your notebook breaks down.
 
 A group run is started like this:
 
-```
+```python
 executor = submitit.get_executor()
 
 def add(a, b):
