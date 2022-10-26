@@ -19,23 +19,53 @@ From inside an environment with `submitit` installed:
 import submitit
 
 def add(a, b):
+    print('hi')
     return a + b
 
 # executor is the submission interface (logs are dumped in the folder)
-executor = submitit.AutoExecutor(folder="log_test")
-# set timeout in min, and partition for running the job
-executor.update_parameters(timeout_min=1, slurm_partition="dev")
+executor = submitit.get_executor()
 job = executor.submit(add, 5, 7)  # will compute add(5, 7)
 print(job.job_id)  # ID of your job
 
 output = job.result()  # waits for completion and returns output
 assert output == 12  # 5 + 7 = 12...  your addition was computed in the cluster
+
+#print job out/err
+job.print()
 ```
 
 The `Job` class also provides tools for reading the log files (`job.stdout()` and `job.stderr()`).
 
 If what you want to run is a command, turn it into a Python function using `submitit.helpers.CommandFunction`, then submit it.
 By default stdout is silenced in `CommandFunction`, but it can be unsilenced with `verbose=True`.
+
+### A group example
+
+Our version of submitit supports groups.
+Groups are named and are saved using their name on the cluster.
+Thus, they persist on the cluster even when your notebook breaks down.
+
+A group run is started like this:
+
+```
+executor = submitit.get_executor()
+
+def add(a, b):
+    print('hi')
+    return a + b
+
+job_group = executor.submit_group('adding', add, [{'a': 4, 'b': 3}, {'a':1, 'b': 1}])
+
+print(job_group)
+
+for j in job_group:
+    print(j.result())
+    
+# get your job group by its name, this even works after restarting your notebook or in a different notebook
+job_group = executor.get_group('adding')
+    
+# job groups can also be canceled together
+job_group.cancel()
 
 **Find more examples [here](docs/examples.md)!!!**
 
