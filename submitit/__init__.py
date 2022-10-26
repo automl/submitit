@@ -98,7 +98,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
         print_job_out(self.get_group(group)[index], **kwargs)
 
 
-def get_executor(folder="/work/dlclarge1/muellesa-MySpace", timeout_min=60, slurm_partition="testdlc_gpu-rtx2080",
+def get_executor(folder="~/submitit_logs", timeout_min=60, slurm_partition="testdlc_gpu-rtx2080",
                  slurm_gres='gpu:1', slurm_setup=['export MKL_THREADING_LAYER=GNU'], **kwargs):
     # executor is the submission interface (logs are dumped in the folderj)
     executor = ConfigLoggingAutoExecutor(folder=folder)
