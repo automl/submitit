@@ -66,6 +66,7 @@ job_group = executor.get_group('adding')
     
 # job groups can also be canceled together
 job_group.cancel()
+```
 
 **Find more examples [here](docs/examples.md)!!!**
 
