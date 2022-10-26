@@ -44,19 +44,9 @@ It aims at running python function from python code.
 
 
 ## Install
-
-Quick install, in a virtualenv/conda environment where `pip` is installed (check `which pip`):
-- stable release:
+Install via
   ```
-  pip install submitit
-  ```
-- stable release using __conda__:
-  ```
-  conda install -c conda-forge submitit
-  ```
-- main branch:
-  ```
-  pip install git+https://github.com/facebookincubator/submitit@main#egg=submitit
+  pip install git+https://github.com/automl/submitit@main#egg=submitit
   ```
 
 You can try running the [MNIST example](docs/mnist.py) to check that everything is working as expected (requires sklearn).
