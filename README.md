@@ -83,6 +83,21 @@ Install via
 You can try running the [MNIST example](docs/mnist.py) to check that everything is working as expected (requires sklearn).
 
 
+## Help
+There is one particularly bad error, that is
+```
+submitit.core.utils.FailedSubmissionError: Could not make sense of sbatch output ""
+```
+
+This means something went wrong in the communication between the cluster and `submitit`.
+One can get more info by constructing the `sbatch` script, that `submitit` generates, by hand.
+This takes some time, though. (We will add a tutorial to do this.)
+
+So far this error meant one of the following (so playing with these might solve it quickly):
+1. The partition is not supported for some reason, try another.
+2. You specified a time out over the limit for that partition.
+3. You specified `gpus_per_node=` on the executor (either in `get_executor` or in `update_parameters`)
+
 ## Documentation
 
 See the following pages for more detailled information:
