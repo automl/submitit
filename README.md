@@ -97,6 +97,7 @@ So far this error meant one of the following (so playing with these might solve 
 1. The partition is not supported for some reason, try another.
 2. You specified a time out over the limit for that partition.
 3. You specified `gpus_per_node=` on the executor (either in `get_executor` or in `update_parameters`)
+4. Passing Arguments as the wrong type, i.e. the time out as `float` or `str` instead of `int`.
 
 ## Documentation
 
