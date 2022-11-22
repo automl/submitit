@@ -60,6 +60,7 @@ print(job_group)
 
 for j in job_group:
     print(j.result())
+    print('kwargs of this job', j.config)
     
 # get your job group by its name, this even works after restarting your notebook or in a different notebook
 job_group = executor.get_group('adding')
