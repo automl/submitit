@@ -35,6 +35,8 @@ job.print()
 ```
 
 The `Job` class also provides tools for reading the log files (`job.stdout()` and `job.stderr()`).
+`submitit.get_executor()` will by default request one GPU per job. Have a look at the arguments to learn more about it.
+(They are very close to the usual SLURM arguments.)
 
 If what you want to run is a command, turn it into a Python function using `submitit.helpers.CommandFunction`, then submit it.
 By default stdout is silenced in `CommandFunction`, but it can be unsilenced with `verbose=True`.
