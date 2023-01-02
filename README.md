@@ -34,6 +34,8 @@ assert output == 12  # 5 + 7 = 12...  your addition was computed in the cluster
 job.print()
 ```
 
+**If you get `submitit.core.utils.FailedSubmissionError: Could not make sense of sbatch output`, see [below](#help).**
+
 The `Job` class also provides tools for reading the log files (`job.stdout()` and `job.stderr()`).
 `submitit.get_executor()` will by default request one GPU per job. Have a look at the arguments to learn more about it.
 (They are very close to the usual SLURM arguments.)
