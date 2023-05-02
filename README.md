@@ -13,7 +13,7 @@ Submitit allows to switch seamlessly between executing on Slurm or locally.
 
 ### An example is worth a thousand words: performing an addition
 
-From inside an environment with `submitit` installed:
+From inside an environment with `submitit` installed running on the login node (or from wherever you usually call `sbatch`):
 
 ```python
 import submitit
