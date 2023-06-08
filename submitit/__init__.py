@@ -26,6 +26,7 @@ import typing as tp
 import os
 import cloudpickle
 
+from copy import deepcopy
 from submitit import *
 R = tp.TypeVar("R", covariant=True)
 
@@ -44,6 +45,18 @@ def print_job_out(job, only_stdout=False, only_stderr=False, last_x_lines=None):
 
 Job.print = print_job_out
 SlurmJob.print = print_job_out
+
+
+def get_config(job):
+    if hasattr(job, '_config'):
+        return deepcopy(job._config)
+    else:
+        raise ValueError('Job has not config. You need to submit with `submit_group` for it to have one.')
+
+
+config_getter = property(get_config)
+Job.config = config_getter
+SlurmJob.config = config_getter
 
 
 class JobGroup(list):
@@ -72,7 +85,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
         fns = [partial(fn, **kwargs) for kwargs in list_of_kwargs]
         jobs = super().submit_array(fns)
         for job, kwargs in zip(jobs, list_of_kwargs):
-            job.config = kwargs
+            job._config = kwargs
         self.groups[name] = jobs
         with open(job_list_fname, 'wb') as f:
             cloudpickle.dump(jobs, f)
