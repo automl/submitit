@@ -51,7 +51,7 @@ def get_config(job):
     if hasattr(job, '_config'):
         return deepcopy(job._config)
     else:
-        raise ValueError('Job has not config. You need to submit with `submit_group` for it to have one.')
+        raise ValueError('Job has no config. You need to submit with `submit_group` for it to have one.')
 
 
 config_getter = property(get_config)
@@ -90,6 +90,12 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
         with open(job_list_fname, 'wb') as f:
             cloudpickle.dump(jobs, f)
         return JobGroup(jobs)
+
+    def __setstate__(self, state):
+        if 'config' in state:
+            state['_config'] = state['config']
+            del state['config']
+        self.__dict__.update(state)
 
     def get_group(self, name: str) -> tp.List[Job]:
         if name not in self.groups:
