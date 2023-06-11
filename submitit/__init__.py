@@ -59,6 +59,16 @@ Job.config = config_getter
 SlurmJob.config = config_getter
 
 
+def job_setstate(self, state):
+    if 'config' in state:
+        state['_config'] = state['config']
+        del state['config']
+    self.__dict__.update(state)
+
+Job.__setstate__ = job_setstate
+SlurmJob.__setstate__ = job_setstate
+
+
 class JobGroup(list):
     def cancel(self):
         for job in self:
@@ -91,11 +101,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
             cloudpickle.dump(jobs, f)
         return JobGroup(jobs)
 
-    def __setstate__(self, state):
-        if 'config' in state:
-            state['_config'] = state['config']
-            del state['config']
-        self.__dict__.update(state)
+
 
     def get_group(self, name: str) -> tp.List[Job]:
         if name not in self.groups:
