@@ -23,6 +23,7 @@ __version__ = "1.4.5"
 
 from functools import partial
 import typing as tp
+import sys
 import os
 import cloudpickle
 
@@ -33,14 +34,21 @@ R = tp.TypeVar("R", covariant=True)
 
 def print_job_out(job, only_stdout=False, only_stderr=False, last_x_lines=None):
     assert not (only_stderr and only_stdout)
-    if not only_stderr:
+
+    any_print = False
+    if not only_stderr and job.stdout() is not None:
         print("STD OUT")
         so = job.stdout().replace('\\n', '\n')
         print('\n'.join(so.split('\n')[-last_x_lines:]) if last_x_lines else so)
-    if not only_stdout:
+        any_print = True
+    if not only_stdout and job.stderr() is not None:
         print("STD ERR")
         se = job.stderr().replace('\\n', '\n')
         print(se[-last_x_lines:] if last_x_lines else se)
+        any_print = True
+    if not any_print:
+        print('No outputs yet. Probably because the job was not yet scheduled.')
+
 
 
 Job.print = print_job_out
@@ -88,9 +96,16 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
         :param list_of_kwargs:
         :return: job list
         """
+        if "wandb" in sys.modules:
+            print(
+                "You might run into seriously weird errors if you use wandb in your notebook and your submitit job."
+            )
+            if input("Do you anyways want to continue? (y/n)") != "y":
+                return
         job_list_fname = self.folder / (name + '.joblist')
         if name in self.groups or os.path.exists(job_list_fname):
-            assert input('Job list already exists. Overwrite? (y/n)') == 'y'
+            if input('Job list already exists. Overwrite? (y/n)') != 'y':
+                return
         self.update_parameters(name=name, slurm_array_parallelism=max_parallel)
         fns = [partial(fn, **kwargs) for kwargs in list_of_kwargs]
         jobs = super().submit_array(fns)
