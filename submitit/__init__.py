@@ -10,6 +10,7 @@ from . import helpers as helpers
 from .auto.auto import AutoExecutor as AutoExecutor
 from .core.core import Executor as Executor
 from .core.core import Job as Job
+from .core.utils import FailedSubmissionError
 from .core.job_environment import JobEnvironment as JobEnvironment
 from .local.debug import DebugExecutor as DebugExecutor
 from .local.debug import DebugJob as DebugJob
@@ -88,6 +89,17 @@ class JobGroup(list):
 class ConfigLoggingAutoExecutor(AutoExecutor):
     groups = {}
 
+    def submit(fn: tp.Callable, *args: tp.Any, **kwargs: tp.Any) -> Job:
+        """
+        Submit the function `fn` to be executed on the cluster as `fn(*args, **kwargs)`.
+        """
+        try:
+            return super().submit(fn, *args, **kwargs)
+        except FailedSubmissionError as e:
+            print(e)
+            raise ValueError('We have a failed submission. This is likely due to selecting a non-existant partition or a too large time-out.')
+            
+
     def submit_group(self, name: str, fn: tp.Callable, list_of_kwargs: tp.List[tp.Dict[str, tp.Any]], max_parallel=100):
         """
 
@@ -108,7 +120,11 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
                 return
         self.update_parameters(name=name, slurm_array_parallelism=max_parallel)
         fns = [partial(fn, **kwargs) for kwargs in list_of_kwargs]
-        jobs = super().submit_array(fns)
+        try:
+            jobs = self.submit_array(fns)
+        except FailedSubmissionError as e:
+            print(e)
+            raise ValueError('We have a failed submission. This is likely due to selecting a non-existant partition or a too large time-out.')
         for job, kwargs in zip(jobs, list_of_kwargs):
             job._config = kwargs
         self.groups[name] = jobs
