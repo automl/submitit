@@ -18,6 +18,7 @@ from .local.local import LocalExecutor as LocalExecutor
 from .local.local import LocalJob as LocalJob
 from .slurm.slurm import SlurmExecutor as SlurmExecutor
 from .slurm.slurm import SlurmJob as SlurmJob
+from .slurm.slurm import SlurmInfoWatcher as SlurmInfoWatcher
 
 __version__ = "1.4.5"
 
@@ -31,6 +32,10 @@ import cloudpickle
 from copy import deepcopy
 from submitit import *
 R = tp.TypeVar("R", covariant=True)
+
+# We change the delay of the SlurmInfoWatcher to 1min s.t. we do not have to wait long for updates, after waiting long for scheduling
+# the default is to increase the time until the next update of the state as the last submitted job is longer and longer ago up to `delay_s`
+SlurmJob.watcher = SlurmInfoWatcher(delay_s=60)
 
 
 def print_job_out(job, only_stdout=False, only_stderr=False, last_x_lines=None):
