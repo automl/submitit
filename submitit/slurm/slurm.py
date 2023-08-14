@@ -353,7 +353,7 @@ class SlurmExecutor(core.PicklingExecutor):
         return nodes * tasks_per_node
 
     def _make_submission_command(self, submission_file_path: Path) -> List[str]:
-        return ["sbatch", str(submission_file_path)]
+        return ["sbatch", "--nice=0", str(submission_file_path)]
 
     @staticmethod
     def _get_job_id_from_submission_command(string: Union[bytes, str]) -> str:
