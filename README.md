@@ -4,6 +4,12 @@
 [![conda-forge](https://img.shields.io/conda/vn/conda-forge/submitit)](https://anaconda.org/conda-forge/submitit)
 # Submit it!
 
+## Install
+Install via
+  ```
+  pip install git+https://github.com/automl/submitit@main#egg=submitit
+  ```
+
 ## What is submitit?
 
 Submitit is a lightweight tool for submitting Python functions for computation within a Slurm cluster.
@@ -79,13 +85,7 @@ Submitit is a Python 3.6+ toolbox for submitting jobs to Slurm.
 It aims at running python function from python code.
 
 
-## Install
-Install via
-  ```
-  pip install git+https://github.com/automl/submitit@main#egg=submitit
-  ```
 
-You can try running the [MNIST example](docs/mnist.py) to check that everything is working as expected (requires sklearn).
 
 
 ## Help
