@@ -95,7 +95,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
     groups = {}
 
     def _make_submission_command(self, submission_file_path) -> tp.List[str]:
-        if 'bosch' in ex.parameters.get('partition',''):
+        if 'bosch' in self.parameters.get('partition',''):
             return ["sbatch", str(submission_file_path), "--bosch"]
         else:
             return super()._make_submission_command(submission_file_path)
