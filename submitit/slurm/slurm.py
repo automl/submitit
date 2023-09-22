@@ -353,6 +353,8 @@ class SlurmExecutor(core.PicklingExecutor):
         return nodes * tasks_per_node
 
     def _make_submission_command(self, submission_file_path: Path) -> List[str]:
+        if 'bosch' in self.parameters.get('partition',''):
+            return ["sbatch", str(submission_file_path), "--bosch"]
         return ["sbatch", "--nice=0", str(submission_file_path)]
 
     @staticmethod
