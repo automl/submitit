@@ -94,6 +94,12 @@ class JobGroup(list):
 class ConfigLoggingAutoExecutor(AutoExecutor):
     groups = {}
 
+    def _make_submission_command(self, submission_file_path) -> tp.List[str]:
+        if 'bosch' in ex.parameters.get('partition',''):
+            return ["sbatch", str(submission_file_path), "--bosch"]
+        else:
+            return super()._make_submission_command(submission_file_path)
+
     def submit(fn: tp.Callable, *args: tp.Any, **kwargs: tp.Any) -> Job:
         """
         Submit the function `fn` to be executed on the cluster as `fn(*args, **kwargs)`.
