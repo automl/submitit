@@ -10,6 +10,12 @@ Install via
   pip install git+https://github.com/automl/submitit@main#egg=submitit
   ```
 
+If you have it installed, you can update just submitit easily with
+
+```
+pip install git+https://github.com/automl/submitit@main#egg=submitit --force-reinstall --no-deps
+```
+
 ## What is submitit?
 
 Submitit is a lightweight tool for submitting Python functions for computation within a Slurm cluster.
