@@ -94,7 +94,7 @@ class JobGroup(list):
 class ConfigLoggingAutoExecutor(AutoExecutor):
     groups = {}
 
-    def submit(fn: tp.Callable, *args: tp.Any, **kwargs: tp.Any) -> Job:
+    def submit(self, fn: tp.Callable, *args: tp.Any, **kwargs: tp.Any) -> Job:
         """
         Submit the function `fn` to be executed on the cluster as `fn(*args, **kwargs)`.
         """
