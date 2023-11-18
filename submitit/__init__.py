@@ -86,7 +86,7 @@ SlurmJob.__setstate__ = job_setstate
 class JobGroup(list):
     def __init__(self, jobs, name):
         self.name = name
-        super.__init__(jobs)
+        super().__init__(jobs)
         
     def cancel(self):
         for job in self:
