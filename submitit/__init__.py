@@ -84,12 +84,16 @@ SlurmJob.__setstate__ = job_setstate
 
 
 class JobGroup(list):
+    def __init__(self, jobs, name):
+        self.name = name
+        super.__init__(jobs)
+        
     def cancel(self):
         for job in self:
             job.cancel()
 
     def __repr__(self):
-        return f"JobGroup({super().__repr__()})"
+        return f"JobGroup[{self.name}]({super().__repr__()})"
 
 class ConfigLoggingAutoExecutor(AutoExecutor):
     groups = {}
@@ -135,7 +139,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
         self.groups[name] = jobs
         with open(job_list_fname, 'wb') as f:
             cloudpickle.dump(jobs, f)
-        return JobGroup(jobs)
+        return JobGroup(jobs, name)
 
 
 
@@ -143,7 +147,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
         if name not in self.groups:
             with open(self.folder / (name + '.joblist'), 'rb') as f:
                 self.groups[name] = cloudpickle.load(f)
-        return JobGroup(self.groups[name])
+        return JobGroup(self.groups[name], name)
 
     def is_group(self, name):
         try:
