@@ -217,4 +217,4 @@ def get_all_groups_in_queue() -> tp.List[JobGroup]:
     """
     Get all groups that are currently queued by you.
     """
-    return get_all_groups_used_for_job_names(get_all_job_names_in_queue_by_user())
+    return get_all_groups_used_for_jobs(get_all_job_names_in_queue_by_user())
