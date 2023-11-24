@@ -22,6 +22,10 @@ from .slurm.slurm import SlurmInfoWatcher as SlurmInfoWatcher
 
 __version__ = "1.4.5"
 
+import subprocess
+import getpass
+import datetime
+import re
 
 from functools import partial
 import typing as tp
@@ -176,3 +180,41 @@ def get_executor(folder="~/submitit_logs", timeout_min=60, slurm_partition="test
 def print_job_states(jobs):
     for j in jobs:
         print(j.state)
+
+
+def get_current_user() -> str:
+    """
+    Get the currently logged in unix user name.
+    """
+    return getpass.getuser()
+
+def get_all_job_names_in_queue_by_user(username: str=get_current_user()) -> tp.List[str]:
+    """
+    This functions helps you to find out which jobs are in the queue, that you submitted.
+    This includes both jobs which are running and pending.
+
+    You can also specify another username, the default is your own username.
+    """
+    result = subprocess.run(['squeue', '--user', username, '--format', '%j'], stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf-8')
+    return output.split('\n')[1:-1]
+
+def get_all_groups_used_for_jobs(job_names: tp.List[str]) -> tp.List[JobGroup]:
+    """
+    Get all the compute groups, used for these jobs or their descendents.
+    """
+    job_names = list(set(job_names))
+    groups = {}
+    for jn in job_names:
+        try:
+            groups[jn] = ex.get_group(jn)
+        except FileNotFoundError:
+            pass
+    return groups
+
+
+def get_all_groups_in_queue() -> tp.List[JobGroup]:
+    """
+    Get all groups that are currently queued by you.
+    """
+    return get_all_groups_used_for_job_names(get_all_job_names_in_queue_by_user())
