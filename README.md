@@ -10,11 +10,12 @@ Install via
   pip install git+https://github.com/automl/submitit@main#egg=submitit
   ```
 
-If you have it installed, you can update just submitit easily with
+If you have it installed, you can update it with the above comment, if the version number in `submitit/__init__.py` was updated, else you can use this
 
 ```
 pip install git+https://github.com/automl/submitit@main#egg=submitit --force-reinstall --no-deps
 ```
+for debugging.
 
 ## What is submitit?
 
