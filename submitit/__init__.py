@@ -177,7 +177,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
                 pass
         return groups
 
-    def get_all_groups_in_queue() -> tp.List[JobGroup]:
+    def get_all_groups_in_queue(self) -> tp.List[JobGroup]:
         """
         Get all groups that are currently queued by you.
         """
