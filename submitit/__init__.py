@@ -145,7 +145,6 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
             cloudpickle.dump(jobs, f)
         return JobGroup(jobs, name)
 
-    @classmethod
     def get_group(self, name: str) -> tp.List[Job]:
         if name not in self.groups:
             with open(self.folder / (name + '.joblist'), 'rb') as f:
@@ -164,6 +163,25 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
 
     def print_job(self, group, index, **kwargs):
         print_job_out(self.get_group(group)[index], **kwargs)
+
+    def get_all_groups_used_for_jobs(self, job_names: tp.List[str]) -> tp.List[JobGroup]:
+        """
+        Get all the compute groups, used for these jobs or their descendents.
+        """
+        job_names = list(set(job_names))
+        groups = {}
+        for jn in job_names:
+            try:
+                groups[jn] = self.get_group(jn)
+            except FileNotFoundError:
+                pass
+        return groups
+
+    def get_all_groups_in_queue() -> tp.List[JobGroup]:
+        """
+        Get all groups that are currently queued by you.
+        """
+        return self.get_all_groups_used_for_jobs(get_all_job_names_in_queue_by_user())
 
 
 def get_executor(folder="~/submitit_logs", timeout_min=60, slurm_partition="testdlc_gpu-rtx2080",
@@ -198,22 +216,7 @@ def get_all_job_names_in_queue_by_user(username: str=get_current_user()) -> tp.L
     output = result.stdout.decode('utf-8')
     return output.split('\n')[1:-1]
 
-def get_all_groups_used_for_jobs(job_names: tp.List[str]) -> tp.List[JobGroup]:
-    """
-    Get all the compute groups, used for these jobs or their descendents.
-    """
-    job_names = list(set(job_names))
-    groups = {}
-    for jn in job_names:
-        try:
-            groups[jn] = ConfigLoggingAutoExecutor.get_group(jn)
-        except FileNotFoundError:
-            pass
-    return groups
 
 
-def get_all_groups_in_queue() -> tp.List[JobGroup]:
-    """
-    Get all groups that are currently queued by you.
-    """
-    return get_all_groups_used_for_jobs(get_all_job_names_in_queue_by_user())
+
+
