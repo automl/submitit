@@ -20,7 +20,7 @@ from .slurm.slurm import SlurmExecutor as SlurmExecutor
 from .slurm.slurm import SlurmJob as SlurmJob
 from .slurm.slurm import SlurmInfoWatcher as SlurmInfoWatcher
 
-__version__ = "1.4.5"
+__version__ = "1.4.6"
 
 import subprocess
 import getpass
