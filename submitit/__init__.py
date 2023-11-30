@@ -145,8 +145,7 @@ class ConfigLoggingAutoExecutor(AutoExecutor):
             cloudpickle.dump(jobs, f)
         return JobGroup(jobs, name)
 
-
-
+    @classmethod
     def get_group(self, name: str) -> tp.List[Job]:
         if name not in self.groups:
             with open(self.folder / (name + '.joblist'), 'rb') as f:
@@ -207,7 +206,7 @@ def get_all_groups_used_for_jobs(job_names: tp.List[str]) -> tp.List[JobGroup]:
     groups = {}
     for jn in job_names:
         try:
-            groups[jn] = ex.get_group(jn)
+            groups[jn] = ConfigLoggingAutoExecutor.get_group(jn)
         except FileNotFoundError:
             pass
     return groups
