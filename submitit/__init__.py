@@ -20,7 +20,7 @@ from .slurm.slurm import SlurmExecutor as SlurmExecutor
 from .slurm.slurm import SlurmJob as SlurmJob
 from .slurm.slurm import SlurmInfoWatcher as SlurmInfoWatcher
 
-__version__ = "1.4.7"
+__version__ = "1.4.8"
 
 import subprocess
 import getpass
@@ -54,7 +54,7 @@ def print_job_out(job, only_stdout=False, only_stderr=False, last_x_lines=None):
     if not only_stdout and job.stderr() is not None:
         print("STD ERR")
         se = job.stderr().replace('\\n', '\n')
-        print(se[-last_x_lines:] if last_x_lines else se)
+        print('\n'.join(se.split('\n')[-last_x_lines:]) if last_x_lines else se)
         any_print = True
     if not any_print:
         print('No outputs yet. Probably because the job was not yet scheduled.')
